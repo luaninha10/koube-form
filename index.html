@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>técnicos koube 01</title>
+<style>
+  /* cores koube: preto fundo, verde destaque, vermelho para borda/hover */
+  :root{
+    --bg: #000;
+    --card: #111;
+    --verde: #00a74f;
+    --vermelho: #ff0000;
+    --texto: #ffffff;
+    --input-bg: #222;
+  }
+  body{
+    margin:0;
+    padding:20px;
+    font-family: Arial, sans-serif;
+    background:var(--bg);
+    color:var(--texto);
+    -webkit-font-smoothing:antialiased;
+  }
+  .container{
+    max-width:480px;
+    margin: 0 auto;
+    text-align:left;
+  }
+  h1{
+    color:var(--verde);
+    text-align:center;
+    margin-bottom:18px;
+    font-size:24px;
+  }
+  form{
+    background:var(--card);
+    padding:18px;
+    border-radius:10px;
+    border:2px solid var(--vermelho);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+  }
+  label{
+    display:block;
+    margin-top:12px;
+    color:var(--verde);
+    font-weight:700;
+    font-size:14px;
+  }
+  input, select{
+    width:100%;
+    box-sizing:border-box;
+    margin-top:6px;
+    padding:10px;
+    border-radius:8px;
+    border:none;
+    background:var(--input-bg);
+    color:var(--texto);
+    font-size:15px;
+  }
+  input::placeholder{ color:#aaa; }
+  .row { display:flex; gap:10px; }
+  .half { flex:1; }
+  input[type="submit"]{
+    margin-top:18px;
+    width:100%;
+    padding:12px;
+    background:var(--verde);
+    color:#fff;
+    font-weight:700;
+    border-radius:8px;
+    cursor:pointer;
+    border:none;
+    font-size:16px;
+  }
+  input[type="submit"]:hover{ background:var(--vermelho); }
+  /* responsivo */
+  @media (max-width:480px){
+    body{ padding:12px; }
+    h1{ font-size:20px; }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>técnicos koube 01</h1>
+    <form id="form">
+      <label>nome:</label>
+      <input type="text" name="nome" required placeholder="nome completo">
+
+      <label>contato (whatsapp):</label>
+      <input type="tel" name="contato" required placeholder="(99) 99999-9999" pattern="[0-9()+\-.\s]{8,}" inputmode="tel">
+
+      <label>nível:</label>
+      <select name="nivel" required>
+        <option value="">selecione...</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
+
+      <label>data de cadastro:</label>
+      <input type="date" name="data_cadastro" required>
+
+      <input type="submit" value="enviar">
+    </form>
+  </div>
+
+<script>
+  // cole aqui a url do seu apps script (web app)
+  const scriptURL = 'https://script.google.com/macros/s/AKfycbybA1w-pPRVEmGXTGQjlVf3FnyzU7VDGtKsIAn1ebV2-V-XdBM181SUhcUfGjbZzXXl/exec';
+
+  const form = document.getElementById('form');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+
+    // pega todos os valores do formulário
+    const fd = new FormData(form);
+    const data = Object.fromEntries(fd.entries());
+
+    // envia como JSON para ficar consistente com o doPost acima
+    fetch(scriptURL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+      if (result && result.result === 'success') {
+        alert('cadastro enviado com sucesso 🙂');
+        form.reset();
+      } else {
+        alert('erro ao enviar. tente novamente.'); 
+      }
+    })
+    .catch(err => {
+      // possível problema de CORS; alternativa: tentar enviar com no-cors (não permite ler resposta)
+      console.error(err);
+      alert('erro ao enviar (ver console). se der CORS, veja a alternativa no passo de solução de problemas.');
+    });
+  });
+</script>
+</body>
+</html>
